@@ -7,11 +7,34 @@ git clone https://github.com/KWMainboardProject/Django_Fashion_Search.git
 git submodule update --init --recursive
 cd src
 ```
-##### Next Step. Set {$ROOT}/src/secrets.json
+### Next Step. Set {$ROOT}/src/secrets.json
 ```json
 # example
 {"SECRET_KEY":"django-insecure-d*upt!(-*)wA#3^cdc-e9ac3s4s8afd9d4m=_2(!a+2v&@1avs2s4v="}
 ```
+
+### Next Step. Set weights files to {$ROOT}/src/weights
+다운로드 링크
+###### yolov5 - fashion detector
+https://drive.google.com/file/d/1u3uS9ZpjCUmRnygRs2looIxrdRvXcSYf/view?usp=sharing
+
+###### u2net - segmentation (https://github.com/xuebinqin/U-2-Net)
+https://drive.google.com/file/d/1vSmKAFtCiGOudu5_7V2HnA-96rTG3v1Z/view?usp=sharing
+
+###### resnet34 - subcategory_top
+https://drive.google.com/file/d/182MLAqJ0pNHbvRA_WqeVTQyC8-kflieQ/view?usp=sharing
+
+###### resnet34 - subcategory_bottom
+https://drive.google.com/file/d/164dWo_t40hsmdG3cHm3HdqWAgmNehU2o/view?usp=sharing
+
+###### resnet34 - subcategory_overall
+https://drive.google.com/file/d/1VUGialL52mITdG6NjBErSBytcnpkNr4u/view?usp=sharing
+
+###### resnet34 - subcategory_outer
+https://drive.google.com/file/d/1bHUZ2BG8qluh1YqaUDmoSqdViks8mQEi/view?usp=sharing
+
+###### resnet34 - pattern
+https://drive.google.com/file/d/1MSL4YsaIKmEE7tv7S8qqglm_pgnOyKFM/view?usp=sharing
 
 # How to Set Development Environment with Anaconda(or PIP)
 https://pytorch.org/get-started/locally/
