@@ -36,6 +36,6 @@ python manage.py runserver
 ```
 ```bash
 # Check if the pytorch works well
-cd detection/detect
+cd analysis/detect
 python DetectObjectPipe.py
 ```
