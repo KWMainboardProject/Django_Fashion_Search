@@ -4,7 +4,7 @@ from django.db.models import CASCADE, Model
 
 # Create your models here.
 class maincategory(Model):
-    name = models.CharField(max_length=20, verbose_name="Main Category")
+    name = models.CharField(max_length=20, verbose_name="Main Category", unique=True)
 
 class attributes_type(Model):
     main = models.ForeignKey(to="maincategory", on_delete=CASCADE, verbose_name="Main Category ID")
