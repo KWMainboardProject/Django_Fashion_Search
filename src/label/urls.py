@@ -15,7 +15,45 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import MaincategoryViewSet, AttributesTypeViewSet,AttributesViewSet,AttributesColorViewSet
+
+#define ViewSet
+maincategory_list = MaincategoryViewSet.as_view({
+    'get' : 'list',
+})
+maincategory_detail = MaincategoryViewSet.as_view({
+    'get' : 'retrieve',
+})
+
+attributesType_list = AttributesTypeViewSet.as_view({
+    'get' : 'list',
+})
+attributesType_detail = AttributesTypeViewSet.as_view({
+    'get' : 'retrieve',
+})
+
+attributes_list = AttributesViewSet.as_view({
+    'get' : 'list',
+})
+attributes_detail = AttributesViewSet.as_view({
+    'get' : 'retrieve',
+})
+
+attributesColor_list = AttributesColorViewSet.as_view({
+    'get' : 'list',
+})
+attributesColor_detail = AttributesColorViewSet.as_view({
+    'get' : 'retrieve',
+})
+
 
 urlpatterns = [
-    path("fashion", lambda request:{"message":"No contents"}),
+    path("maincategory/", maincategory_list),
+    path("maincategory/<int:id>/", maincategory_detail),
+    path("attributesType/", attributesType_list),
+    path("attributesType/<int:id>/", attributesType_detail),
+    path("attributes/", attributes_list),
+    path("attributes/<int:id>/", attributes_detail),
+    path("attributesColor/", attributesColor_list),
+    path("attributesColor/<int:id>/", attributesColor_detail),
 ]

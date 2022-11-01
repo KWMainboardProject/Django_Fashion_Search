@@ -24,3 +24,11 @@ urlpatterns = [
     path("api/search/", include('search.urls')),
     path("api/label/", include('label.urls')),
 ]
+
+# django media
+from django.views.static import serve
+from django.conf import settings
+from django.conf.urls.static import static
+
+# django media
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
