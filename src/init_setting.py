@@ -1,23 +1,37 @@
 # python manage.py shell_plus --print-sql
 from label.models import * 
+from django.contrib.auth.models import User
 
 def is_debug_setting()->bool:
     return True
 
 print("==== Start ====")
 
+try:
+    anonymous = User.objects.create_user(
+            'anonymous', # user id
+            'anonymous@naver.com', #user email
+            'anonymous' # user pw 
+            )
+    anonymous.save()
+    print(f"Create Anoymous : {anonymous.username}")
+except:
+    print("Pass to create anonymous")
+
 # Create Test User
 if is_debug_setting():
-    from django.contrib.auth.models import User
-    u = User.objects.create_user(
-        'tglee', # user id
-        'tglee@naver.com', #user email
-        'tglee1' # user pw 
-        )
-    u.is_staff = True
-    u.is_superuser = True
-    u.save()
-
+    try:
+        u = User.objects.create_user(
+            'tglee', # user id
+            'tglee@naver.com', #user email
+            'tglee1' # user pw 
+            )
+        u.is_staff = True
+        u.is_superuser = True
+        u.save()
+        print(f"Create User : {u.username}")
+    except:
+        pass
 
 # Create Main Category
 maincategory_set = ["Overall", "Bottom", "Top", "Outer"]
