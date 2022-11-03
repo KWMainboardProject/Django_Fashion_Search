@@ -46,3 +46,25 @@ class AttributeTable(DBView):
     class Meta:
         managed = False 
         db_table = "AttributeTable"
+
+class AttributeIndexTable(DBView):
+    # id =  models.OneToOneField(to="Attributes", primary_key=True, on_delete=models.DO_NOTHING, verbose_name="Attributes ID")
+    maincategory = models.ForeignKey(to="Maincategory", on_delete=models.DO_NOTHING, verbose_name="Main Category ID")
+    attributes = models.ForeignKey(to="AttributesType", on_delete=models.DO_NOTHING, verbose_name="Attributes ID")
+    data = models.JSONField(default=dict, verbose_name="Data JSON")
+    view_definition = lambda: str(
+        Attributes.objects.select_related(
+            "type","type__main"
+            ).values(
+                "id", 
+                "type__main_id", 
+                "type_id", 
+                "data"
+                ).annotate(
+                    maincategory_id=F("type__main_id"), 
+                    attributes_id=F("type_id")
+                    ).all().query
+    )
+    class Meta:
+        managed = False 
+        db_table = "AttributeIndexTable"

@@ -29,3 +29,8 @@ class AttributesTableViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     queryset = AttributeTable.objects.all()
     serializer_class = AttributesTableSerializer
+    
+class AttributesIndexTableViewSet(viewsets.ModelViewSet):
+    lookup_field = 'id'
+    queryset = AttributeIndexTable.objects.all()
+    serializer_class = AttributesIndexTableSerializer

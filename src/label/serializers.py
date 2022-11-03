@@ -20,3 +20,8 @@ class AttributesTableSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttributeTable
         fields = '__all__'
+
+class AttributesIndexTableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AttributeIndexTable
+        fields = '__all__'
