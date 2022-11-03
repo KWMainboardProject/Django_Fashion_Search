@@ -121,9 +121,9 @@ attr_set={
 for category in maincategory_set:
     # Set Main Category
     try:
-        main = maincategory(name=category)
+        main = Maincategory(name=category)
         main.save()
-        print(f"Create {category} : "+ str(maincategory.objects.all()))
+        print(f"Create {category} : "+ str(Maincategory.objects.all()))
     except Exception as ex:
         print(f"Pass {category} : " + str(ex))
         continue
@@ -131,9 +131,9 @@ for category in maincategory_set:
     # Set Type category
     for attr_type in attr_type_set:
         try:
-            attr_types = attributes_type(main=main, name=attr_type)
+            attr_types = AttributesType(main=main, name=attr_type)
             attr_types.save()
-            print(f"\tCreate {attr_type} : "+ str(attributes_type.objects.filter(main=main)))
+            print(f"\tCreate {attr_type} : "+ str(AttributesType.objects.filter(main=main)))
         except Exception as ex:
             print(f"\tPass {attr_type} : " + str(ex))
             continue
@@ -148,8 +148,8 @@ for category in maincategory_set:
         # Set Attributes
         for i, attr in enumerate(attr_list):
             try:
-                attributes(type=attr_types, name=attr, index=i).save()
-                print(f"\t\tCreate {attr} : "+ str(attributes.objects.filter(type=attr_types)))
+                Attributes(type=attr_types, name=attr, index=i).save()
+                print(f"\t\tCreate {attr} : "+ str(Attributes.objects.filter(type=attr_types)))
             except Exception as ex:
                 print(f"\t\tPass {attr} : " + str(ex))
                 continue

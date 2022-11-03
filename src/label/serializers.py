@@ -3,20 +3,20 @@ from .models import *
 
 class MaincategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = maincategory
+        model = Maincategory
         fields = '__all__'
         
 class AttributesTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = attributes_type
+        model = AttributesType
         fields = '__all__'
 
 class AttributesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = attributes
+        model = Attributes
         fields = '__all__'
         
 class AttributesColorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = attributes_color
+        model = AttributesColor
         fields = '__all__'

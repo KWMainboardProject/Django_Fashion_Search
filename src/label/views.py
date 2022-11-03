@@ -12,20 +12,20 @@ from .serializers import *
 # Create your views here.
 class MaincategoryViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
-    queryset = maincategory.objects.all()
+    queryset = Maincategory.objects.all()
     serializer_class = MaincategorySerializer
     
 class AttributesTypeViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
-    queryset = attributes_type.objects.all()
+    queryset = AttributesType.objects.all()
     serializer_class = AttributesTypeSerializer
     
 class AttributesViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
-    queryset = attributes.objects.all()
+    queryset = Attributes.objects.all()
     serializer_class = AttributesSerializer
     
 class AttributesColorViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
-    queryset = attributes_color.objects.all()
+    queryset = AttributesColor.objects.all()
     serializer_class = AttributesColorSerializer
