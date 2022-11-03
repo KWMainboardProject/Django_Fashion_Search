@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import MaincategoryViewSet, AttributesTypeViewSet,AttributesViewSet,AttributesColorViewSet
+from .views import MaincategoryViewSet, AttributesTypeViewSet, AttributesViewSet, AttributesTableViewSet
 
 #define ViewSet
 maincategory_list = MaincategoryViewSet.as_view({
@@ -39,13 +39,12 @@ attributes_detail = AttributesViewSet.as_view({
     'get' : 'retrieve',
 })
 
-attributesColor_list = AttributesColorViewSet.as_view({
+AttributesClass_list = AttributesTableViewSet.as_view({
     'get' : 'list',
 })
-attributesColor_detail = AttributesColorViewSet.as_view({
+AttributesClass_detail = AttributesTableViewSet.as_view({
     'get' : 'retrieve',
 })
-
 
 urlpatterns = [
     path("maincategory/", maincategory_list),
@@ -54,6 +53,6 @@ urlpatterns = [
     path("attributesType/<int:id>/", attributesType_detail),
     path("attributes/", attributes_list),
     path("attributes/<int:id>/", attributes_detail),
-    path("attributesColor/", attributesColor_list),
-    path("attributesColor/<int:id>/", attributesColor_detail),
+    path("attributes/table/", AttributesClass_list),
+    path("attributes/table/<int:id>/", AttributesClass_detail),
 ]

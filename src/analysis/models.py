@@ -1,12 +1,12 @@
 from django.db import models
 from django.db.models import CASCADE, Model
 
-from label.models import Maincategory, Attributes, AttributesColor
+from label.models import Maincategory, Attributes
 from image.models import request_image
 from fashion_api.settings import BASE_DIR, MEDIA_ROOT
 
 # Create your models here.
-class analysis_state(Model):
+class pipe_work_state(Model):
     WORK_STATE = [
         ('U', "Undefine"),
         ('A', "Progress"),
@@ -23,9 +23,5 @@ class analysis_state(Model):
 class image_attributes(Model):
     image = models.ForeignKey(to="image.request_image", on_delete=CASCADE, verbose_name="Image")
     attribute = models.ForeignKey(to="label.attributes", on_delete=CASCADE, verbose_name="Attributes")
-
-class image_attributes_color(Model):
-    image = models.ForeignKey(to="image.request_image", on_delete=CASCADE, verbose_name="Image")
-    attribute = models.ForeignKey(to="label.AttributesColor", on_delete=CASCADE, verbose_name="Attributes Color")
 
     

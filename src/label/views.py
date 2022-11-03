@@ -24,8 +24,8 @@ class AttributesViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     queryset = Attributes.objects.all()
     serializer_class = AttributesSerializer
-    
-class AttributesColorViewSet(viewsets.ModelViewSet):
+
+class AttributesTableViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
-    queryset = AttributesColor.objects.all()
-    serializer_class = AttributesColorSerializer
+    queryset = AttributeTable.objects.all()
+    serializer_class = AttributesTableSerializer

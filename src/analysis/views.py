@@ -16,17 +16,15 @@ from .serializers import *
 # Create your views here.
 class AnalysisStateSViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
-    queryset = analysis_state.objects.all()
+    queryset = pipe_work_state.objects.all()
     serializer_class = AnalysisStateSerializer
 class ImageAttributesSViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     queryset = image_attributes.objects.all()
     serializer_class = ImageAttributesSerializer
-class ImageAttributesColorViewSet(viewsets.ModelViewSet):
-    lookup_field = 'id'
-    queryset = image_attributes_color.objects.all()
-    serializer_class = ImageAttributesColortSerializer
  
+ # state 검색기능도 제공해야 한다. image_id 를 기반으로 하는 검색을 말이다.
+ # image_id를 기반으로 속성들을 모두 보여주는 기능이 필요하다.
 
 def test_make_coord(carom_id, usr, t=1):
     print("======== test ============")
@@ -42,50 +40,50 @@ def test_make_coord(carom_id, usr, t=1):
     carom_img.save()
     print("======== save ball_coord ============")
 
-class DetectRequestAPIView(APIView):
-    def get_coord(self, carom_id):
-        try:
-            return balls_coord.objects.get(carom_id=carom_id)
-        except balls_coord.DoesNotExist:
-            raise Http404
-    def make_coord(self, carom_id, usr="ANOYMOUS"):
-        import threading
-        #detect PIPE
-        try:
-            runner = threading.Thread(target=test_make_coord, args=(carom_id, usr))
-            runner.start()
-        except Exception as ex:
-            print("make_coord ex : "+ str(ex))
+# class DetectRequestAPIView(APIView):
+#     def get_coord(self, carom_id):
+#         try:
+#             return balls_coord.objects.get(carom_id=carom_id)
+#         except balls_coord.DoesNotExist:
+#             raise Http404
+#     def make_coord(self, carom_id, usr="ANOYMOUS"):
+#         import threading
+#         #detect PIPE
+#         try:
+#             runner = threading.Thread(target=test_make_coord, args=(carom_id, usr))
+#             runner.start()
+#         except Exception as ex:
+#             print("make_coord ex : "+ str(ex))
             
-    def get(self, request, carom_id, usr, format=None):
-        # carom에서 carom_id 있는지 확인
-        try:
-            carom_obj = carom.objects.get(id=carom_id)
-        except carom.DoesNotExist: # 이미지가 아직 저장 안된 경우
-            return Response({"message":"Image doesn't exist"},status=status.HTTP_404_NOT_FOUND)
+#     def get(self, request, carom_id, usr, format=None):
+#         # carom에서 carom_id 있는지 확인
+#         try:
+#             carom_obj = carom.objects.get(id=carom_id)
+#         except carom.DoesNotExist: # 이미지가 아직 저장 안된 경우
+#             return Response({"message":"Image doesn't exist"},status=status.HTTP_404_NOT_FOUND)
         
-        # carom의 detect_state 확인
-        state = carom_obj.detect_state
+#         # carom의 detect_state 확인
+#         state = carom_obj.detect_state
         
-        if state == "A" or state == "N":
-            self.make_coord(carom_id, usr)
-            return Response({"state":"Accepted"}, status=status.HTTP_202_ACCEPTED) #기다리라고 한다.
+#         if state == "A" or state == "N":
+#             self.make_coord(carom_id, usr)
+#             return Response({"state":"Accepted"}, status=status.HTTP_202_ACCEPTED) #기다리라고 한다.
             
-        if state == "D":
-            try:
-                coord_obj = balls_coord.objects.get(carom_id=carom_id)
-                http_status = status.HTTP_200_OK
-                serializer = CoordSerializer(coord_obj)
-            except:
-                return Response({"message":"Ball Corrdination doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
-            # requester 로그 쌓기
-            try:
-                # request를 찾고
-                requester = detect_request.objects.get(carom_id=carom_id, requester=usr)
-            except detect_request.DoesNotExist:
-                #존재 하지 않으면 새로 생성
-                detect_request(carom_id=carom_id, requester=usr).save()
-            return Response(serializer.data, status=http_status)
+#         if state == "D":
+#             try:
+#                 coord_obj = balls_coord.objects.get(carom_id=carom_id)
+#                 http_status = status.HTTP_200_OK
+#                 serializer = CoordSerializer(coord_obj)
+#             except:
+#                 return Response({"message":"Ball Corrdination doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+#             # requester 로그 쌓기
+#             try:
+#                 # request를 찾고
+#                 requester = detect_request.objects.get(carom_id=carom_id, requester=usr)
+#             except detect_request.DoesNotExist:
+#                 #존재 하지 않으면 새로 생성
+#                 detect_request(carom_id=carom_id, requester=usr).save()
+#             return Response(serializer.data, status=http_status)
         
-        #진행중이라면
-        return Response({"state":"Progress"}, status=status.HTTP_202_ACCEPTED) #기다리라고 한다.
+#         #진행중이라면
+#         return Response({"state":"Progress"}, status=status.HTTP_202_ACCEPTED) #기다리라고 한다.

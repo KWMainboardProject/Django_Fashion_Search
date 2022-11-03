@@ -137,8 +137,6 @@ for category in maincategory_set:
         except Exception as ex:
             print(f"\tPass {attr_type} : " + str(ex))
             continue
-        
-        
         try:
             attr_list = attr_set[category][attr_type]
             print(attr_list)
@@ -148,12 +146,80 @@ for category in maincategory_set:
         # Set Attributes
         for i, attr in enumerate(attr_list):
             try:
-                Attributes(type=attr_types, name=attr, index=i).save()
+                Attributes(type=attr_types, data={"type":"class", "class":attr, "index":i}).save()
                 print(f"\t\tCreate {attr} : "+ str(Attributes.objects.filter(type=attr_types)))
             except Exception as ex:
                 print(f"\t\tPass {attr} : " + str(ex))
                 continue
+
+if is_debug_setting():
+    attr_set={
+        "Overall":{
+            "Main Color":[
+                list(map(lambda x: [x,x,x] ,range(0,255, 10)))
+            ],
+            "Sub Color":[
+                list(map(lambda x: [x,x,x] ,range(0,255, 10)))
+            ]
+        },
+        "Bottom":{
+            "Main Color":[
+                list(map(lambda x: [x,x,x] ,range(0,255, 10)))
+            ],
+            "Sub Color":[
+                list(map(lambda x: [x,x,x] ,range(0,255, 10)))
+            ]
+        },
+        "Top":{
+            "Main Color":[
+                list(map(lambda x: [x,x,x] ,range(0,255, 10)))
+            ],
+            "Sub Color":[
+                list(map(lambda x: [x,x,x] ,range(0,255, 10)))
+            ]
+        },
+        "Outer":{
+            "Main Color":[
+                list(map(lambda x: [x,x,x] ,range(0,255, 10)))
+            ],
+            "Sub Color":[
+                list(map(lambda x: [x,x,x] ,range(0,255, 10)))
+            ]
+        },
+    }
+    for main_id, category in enumerate(maincategory_set):
+        for attr_type in attr_type_set:
+            print(f'========= {main_id} {category} : {attr_type} ================')
+            try:
+                attr_list = attr_set[category][attr_type]
+            except:
+                continue
+            
+            id = AttributesType.objects.get(main_id=main_id+1, name=attr_type)
+            print(f"Start {id.main} {id.name}")
+            
+            # Set Attributes
+            for attr in attr_list:
+                for color in attr:
+                    try:
+                        attribute_color = Attributes(type=id, data={"type":"color", "color":color, "persent":50})
+                        same = Attributes.objects.filter(
+                            type=id,
+                            data={"type":"color", "color":color, "persent":50}
+                            ).first()
+                        if same is None:
+                            attribute_color.save()
+                            print(f"Create {color} : "+ str(Attributes.objects.filter(
+                                type=id,
+                                data={"type":"color", "color":color, "persent":50}
+                                ).first().data))
+                        else:
+                            pass
+                    except Exception as ex:
+                        print(f"\tPass {color} : " + str(ex))
+                        continue
             
 print("==== END ====")
-        
+
+
         

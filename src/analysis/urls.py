@@ -15,7 +15,28 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import AnalysisStateSViewSet, ImageAttributesSViewSet
 
+#define ViewSet
+AnalysisState_list = AnalysisStateSViewSet.as_view({
+    'get' : 'list',
+})
+AnalysisState_detail = AnalysisStateSViewSet.as_view({
+    'get' : 'retrieve',
+    'delete' : 'destroy'
+})
+ImageAttributes_list = ImageAttributesSViewSet.as_view({
+    'get' : 'list',
+})
+ImageAttributes_detail = ImageAttributesSViewSet.as_view({
+    'get' : 'retrieve',
+    'delete' : 'destroy'
+})
+#define url pattern
 urlpatterns = [
-    path("fashion", lambda request:{"message":"No contents"}),
+    # path("fashion/<int:carom_id>/<str:usr>/", DetectRequestAPIView.as_view()),
+    path("state/", AnalysisState_list),
+    path("state/<int:id>/", AnalysisState_detail),
+    path("attributes/class/", ImageAttributes_list),
+    path("attributes/class/<int:id>/", ImageAttributes_detail),
 ]

@@ -16,7 +16,7 @@ class AttributesSerializer(serializers.ModelSerializer):
         model = Attributes
         fields = '__all__'
         
-class AttributesColorSerializer(serializers.ModelSerializer):
+class AttributesTableSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AttributesColor
+        model = AttributeTable
         fields = '__all__'
