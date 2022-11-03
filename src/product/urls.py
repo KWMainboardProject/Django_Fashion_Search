@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from product import views
 
 urlpatterns = [
-    path("fashion", lambda request:{"message":"No contents"}),
+    path('register/', views.productRegister),
+    path('my_products/', views.myProductList),
 ]

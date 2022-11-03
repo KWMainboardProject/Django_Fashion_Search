@@ -30,7 +30,7 @@ if SECRET_BASE_FILE.exists():
         setattr(sys.modules[__name__], key, value)
     print("Complete to Set secrets.json")
 else:
-    print("Plese Set secrets.json")
+    print("Please Set secrets.json")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "label",
     "product",
     "search",
+    "account",
 ]
 
 MIDDLEWARE = [
@@ -157,3 +158,5 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
+
+AUTH_USER_MODEL = 'account.User'
