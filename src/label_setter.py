@@ -1,7 +1,23 @@
 # python manage.py shell_plus --print-sql
 from label.models import * 
 
+def is_debug_setting()->bool:
+    return True
+
 print("==== Start ====")
+
+# Create Test User
+if is_debug_setting():
+    from django.contrib.auth.models import User
+    u = User.objects.create_user(
+        'tglee', # user id
+        'tglee@naver.com', #user email
+        'tglee1' # user pw 
+        )
+    u.is_staff = True
+    u.is_superuser = True
+    u.save()
+
 
 # Create Main Category
 maincategory_set = ["Overall", "Bottom", "Top", "Outer"]

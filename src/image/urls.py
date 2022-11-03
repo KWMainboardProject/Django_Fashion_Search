@@ -15,7 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import RequestImageViewSet
 
-urlpatterns = [
-    path("fashion", lambda request:{"message":"No contents"}),
+#define ViewSet
+image_list = RequestImageViewSet.as_view({
+    'get' : 'list',
+    'post' : 'create',
+})
+image_detail = RequestImageViewSet.as_view({
+    'get' : 'retrieve',
+    'put': 'update',
+    'delete' : 'destroy'
+})
+
+#define url pattern
+urlpatterns =[
+    path('request/', image_list),
+    path('request/<int:pk>/', image_detail),
 ]
