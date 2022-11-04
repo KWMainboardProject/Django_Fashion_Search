@@ -10,3 +10,5 @@ class ImageAttributesSerializer(serializers.ModelSerializer):
     class Meta:
         model = image_attributes
         fields = '__all__'
+
+

@@ -1,7 +1,8 @@
 from django.db import models
-from django.db.models import CASCADE, Model
+from django_db_views.db_view import DBView
+from django.db.models import CASCADE, Model, F
 
-from label.models import Maincategory, Attributes
+from label.models import Maincategory, Attributes, AttributeIndexTable
 from image.models import request_image
 from fashion_api.settings import BASE_DIR, MEDIA_ROOT
 
@@ -22,6 +23,5 @@ class pipe_work_state(Model):
     
 class image_attributes(Model):
     image = models.ForeignKey(to="image.request_image", on_delete=CASCADE, verbose_name="Image")
-    attribute = models.ForeignKey(to="label.attributes", on_delete=CASCADE, verbose_name="Attributes")
-
-    
+    attribute = models.ForeignKey(to="label.Attributes", on_delete=CASCADE, verbose_name="Attributes")
+    obj_idx = models.PositiveSmallIntegerField(verbose_name="Attributes")
