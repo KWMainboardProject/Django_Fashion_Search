@@ -2,7 +2,7 @@ from django.db import models
 from django_db_views.db_view import DBView
 from django.db.models import CASCADE, Model, F
 
-from label.models import Maincategory, Attributes, AttributeIndexTable
+from label.models import Maincategory, Attributes
 from image.models import request_image
 from fashion_api.settings import BASE_DIR, MEDIA_ROOT
 
