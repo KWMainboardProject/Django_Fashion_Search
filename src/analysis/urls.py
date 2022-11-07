@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import AnalysisStateSViewSet, ImageAttributesSViewSet
+from .views import AnalysisStateSViewSet, ImageAttributesViewSet, ImageAttributesTableViewSet, DetectRequestAPIView
 
 #define ViewSet
 AnalysisState_list = AnalysisStateSViewSet.as_view({
@@ -25,10 +25,18 @@ AnalysisState_detail = AnalysisStateSViewSet.as_view({
     'get' : 'retrieve',
     'delete' : 'destroy'
 })
-ImageAttributes_list = ImageAttributesSViewSet.as_view({
+ImageAttributes_list = ImageAttributesViewSet.as_view({
     'get' : 'list',
 })
-ImageAttributes_detail = ImageAttributesSViewSet.as_view({
+ImageAttributes_detail = ImageAttributesViewSet.as_view({
+    'get' : 'retrieve',
+    'delete' : 'destroy'
+})
+
+ImageAttributesTable_list = ImageAttributesTableViewSet.as_view({
+    'get' : 'list',
+})
+ImageAttributesTable_detail = ImageAttributesTableViewSet.as_view({
     'get' : 'retrieve',
     'delete' : 'destroy'
 })
@@ -37,6 +45,10 @@ urlpatterns = [
     # path("fashion/<int:carom_id>/<str:usr>/", DetectRequestAPIView.as_view()),
     path("state/", AnalysisState_list),
     path("state/<int:id>/", AnalysisState_detail),
-    path("attributes/class/", ImageAttributes_list),
-    path("attributes/class/<int:id>/", ImageAttributes_detail),
+    path("attributes/simple", ImageAttributes_list),
+    path("attributes/simple/<int:id>/", ImageAttributes_detail),
+    path("attributes/result/", ImageAttributesTable_list),
+    path("attributes/result/<int:id>/", ImageAttributesTable_detail),
+    path("attributes/<int:img_id>/", DetectRequestAPIView.as_view()),
+    path("attributes/<int:img_id>/<int:maincategory_id>", DetectRequestAPIView.as_view()),
 ]

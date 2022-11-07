@@ -8,8 +8,8 @@ from fashion_api.settings import BASE_DIR, MEDIA_ROOT
 class request_image(Model):
     WORK_STATE = [
         ('U', "Undefine"),
+        ('A', "Accepted"),
         ('P', "Progress"),
-        ('N', "None"),
         ('D', "Done"),
     ]
     

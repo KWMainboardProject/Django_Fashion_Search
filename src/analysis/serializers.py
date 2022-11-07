@@ -12,3 +12,7 @@ class ImageAttributesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ImageAttributesTableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageAttributesTable
+        fields = '__all__'
