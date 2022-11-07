@@ -36,8 +36,9 @@ def login(request):
         user = auth.authenticate(request, username=username, password=password)
         if user is not None:
             auth.login(request, user)
+            request.session['user'] = user.id
             print(">> User Login Complete")
-            return redirect('home')
+            return redirect('/')
     print("<< Login Fail!")
     return render(request, 'login.html')
 
