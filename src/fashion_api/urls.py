@@ -16,7 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# from django.views import index,blog,post
+from fashion_api.views import index, about
+
 urlpatterns = [
+    path("",index),
+    path("index",index),
+    path("about",about),
     path("admin/", admin.site.urls),
     path("api/product/", include('product.urls')),
     path("api/image/", include('image.urls')),
