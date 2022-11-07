@@ -30,12 +30,9 @@ class attributes(Model):
                 name = "unique attribute"
             )
         ]
-class color(Model):
-    R = models.PositiveSmallIntegerField(verbose_name="Red Space Value")
-    G = models.PositiveSmallIntegerField(verbose_name="Green Space Value")
-    B = models.PositiveSmallIntegerField(verbose_name="Blue Space Value")
-    persent = models.DecimalField(max_digits=3, decimal_places=1, verbose_name="Persent")
+
     
 class attributes_color(Model):
     type = models.ForeignKey(to="attributes_type", on_delete=CASCADE, verbose_name="Type")
-    color = models.ForeignKey(to="color", on_delete=CASCADE, verbose_name="Color")
+    color = models.JSONField(default=dict, verbose_name="COLOR JSON")
+    # ex {"red":150, "blue":200, "green": 30, "persent":40}
