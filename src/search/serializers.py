@@ -1,27 +1,12 @@
 from rest_framework import serializers
 from .models import *
 
-class MaincategorySerializer(serializers.ModelSerializer):
+class SearchRequestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Maincategory
+        model = search_request
         fields = '__all__'
         
-class AttributesTypeSerializer(serializers.ModelSerializer):
+class SearchResultSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AttributesType
-        fields = '__all__'
-
-class AttributesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Attributes
-        fields = '__all__'
-        
-class AttributesTableSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AttributeTable
-        fields = '__all__'
-
-class AttributesIndexTableSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AttributeIndexTable
+        model = search_result
         fields = '__all__'

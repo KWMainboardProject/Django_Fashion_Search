@@ -5,6 +5,7 @@ from django.db.models import CASCADE, Model, F
 from label.models import Maincategory, Attributes, AttributeIndexTable
 from image.models import request_image
 from analysis.models import ImageAttributesTable
+from product.models import Product
 from fashion_api.settings import BASE_DIR, MEDIA_ROOT
 
 # Create your models here.
@@ -22,3 +23,5 @@ class search_request(Model):
     
 class search_result(Model):
     score = models.FloatField(verbose_name="Score")
+    product = models.ForeignKey(to="product.Product", on_delete=CASCADE, verbose_name="Product ID")
+    request = models.ForeignKey(to="search_request", on_delete=CASCADE, verbose_name="Request ID")
