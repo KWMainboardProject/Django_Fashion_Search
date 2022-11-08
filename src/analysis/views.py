@@ -69,11 +69,7 @@ class DetectRequestAPIView(APIView):
         state = img_obj.analysis_state
         
         
-        if state == "P":
-            # 연산이 진행중일때, 
-            return Response({"state":"Progress"}, status=status.HTTP_202_ACCEPTED) #기다리라고 한다.
-        
-        elif state == "U":
+        if state == "U":
             # 연산이 시작하지 않았다면, 연산을 시작한다.
             self.make_attributes(img_id)
             return Response({"state":"Undefine"}, status=status.HTTP_202_ACCEPTED) #기다리라고 한다.

@@ -9,14 +9,14 @@ ROOT = FILE.parents
 
 from yolov5.utils.dataloaders import VID_FORMATS, LoadImages, LoadStreams
 from DetectObjectPipe import DetectObjectPipe
-from pipe_cls import IObserverPipe, ConvertToxywhPipe, PipeResource, ResourceBag, SplitCls, SplitIdx, FirstCopyPipe, StartNotDetectCutterPipe, xyxy2xywh, test_print
+from pipe_cls import IObserverPipe, ConvertToxywhPipe, PipeResource, ResourceBag, SplitMaincategory, SplitIdx, FirstCopyPipe, StartNotDetectCutterPipe, xyxy2xywh, test_print
 
 def pipe_factory(start_pipe=None, device='cpu', display = True):
     if display:
         print("initialize weights")
     #detect class and split class
     detect_cls_pipe = DetectObjectPipe(device=device, display=display)
-    split_cls_pipe = SplitCls()
+    split_cls_pipe = SplitMaincategory()
     
     
 

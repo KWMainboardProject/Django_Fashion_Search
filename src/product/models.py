@@ -53,3 +53,6 @@ class Image(models.Model):
     class Meta:
         db_table = 'image'
 
+class ProductAttributes(models.Model):
+    product = models.ForeignKey(to="Product", on_delete=models.CASCADE, verbose_name="Product ID")
+    attribute = models.ForeignKey(to="label.Attributes", on_delete=models.CASCADE, verbose_name="Attributes ID")
