@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_db_views",
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
     "knox",
     
@@ -61,6 +62,7 @@ INSTALLED_APPS = [
     "label",
     "product",
     "search",
+    "account",
 ]
 
 MIDDLEWARE = [
@@ -150,10 +152,20 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+AUTH_USER_MODEL = "account.User"
+
 #참고
 #https://velog.io/@killi8n/Dnote-5-1.-Django-%EA%B6%8C%ED%95%9C-%EC%84%A4%EC%A0%95-%EB%B0%8F-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85-%EA%B5%AC%ED%98%84-tmjmep5tcm
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        #'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
