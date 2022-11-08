@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = '/media/'
 
+SETTINGS_PATH = os.path.normpath(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -30,7 +31,7 @@ if SECRET_BASE_FILE.exists():
         setattr(sys.modules[__name__], key, value)
     print("Complete to Set secrets.json")
 else:
-    print("Plese Set secrets.json")
+    print("Please Set secrets.json")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     
+    
     #Add django extensions
     "django_extensions",
     "django_db_views",
@@ -61,6 +63,7 @@ INSTALLED_APPS = [
     "label",
     "product",
     "search",
+    "account",
 ]
 
 MIDDLEWARE = [
@@ -80,7 +83,7 @@ ROOT_URLCONF = "fashion_api.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(SETTINGS_PATH,'templates'),],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -143,8 +146,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
+STATICFILES_DIRS =(
+    os.path.join(BASE_DIR,'static'),
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -157,3 +163,5 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
+
+AUTH_USER_MODEL = 'account.User'
