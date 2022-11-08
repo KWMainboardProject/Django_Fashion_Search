@@ -17,12 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 
 # from django.views import index,blog,post
-from fashion_api.views import index, about
+from fashion_api.views import index, about, create, login, signup, search_i
 
 urlpatterns = [
     path("",index),
     path("index",index),
     path("about",about),
+    path("create",create),
+    path("login",login),
+    path("signup",signup),
+    path("search_i",search_i),
     path("admin/", admin.site.urls),
     path("api/product/", include('product.urls')),
     path("api/image/", include('image.urls')),
