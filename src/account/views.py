@@ -1,46 +1,25 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib import auth
-from django.contrib.auth.hashers import make_password
+from django.shortcuts import render
+from .serializer import UserSerializer
 from .models import User
+from rest_framework import generics, viewsets
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 
 # Create your views here.
 
-def home(request):
-    return render(request, 'home.html')
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
 
-def signup(request):
-    if request.method == 'GET':
-        return render(request, 'signup.html')
-    elif request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        res_data = {}
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-        if not(username and password):
-            res_data['error'] = "모든 값을 입력해야 합니다."
-            return render(request, 'signup.html', res_data)
-        else:
-            user = User(
-                username = username,
-                password = make_password(password),
-            )
-            print(">> User Save Complete")
-            user.save()
-        return render(request, 'home.html')
-
-def login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = make_password(request.POST['password'])
-        user = auth.authenticate(request, username=username, password=password)
-        if user is not None:
-            auth.login(request, user)
-            request.session['user'] = user.id
-            print(">> User Login Complete")
-            return redirect('/')
-    print("<< Login Fail!")
-    return render(request, 'login.html')
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = UserSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 def logout(request):
     auth.logout(request)
