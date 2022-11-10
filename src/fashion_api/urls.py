@@ -21,12 +21,21 @@ from django.views.generic import RedirectView
 from fashion_api.views import index, about
 
 # from django.views import index,blog,post
-from fashion_api.views import index, about
+from fashion_api.views import index, about, create, login, signup, search_i, overall_list, outer_list, bottom_list, top_list, product_info
 
 urlpatterns = [
     path("",index),
     path("index",index),
     path("about",about),
+    path("create",create),
+    path("login",login),
+    path("signup",signup),
+    path("Overall-list",overall_list),
+    path("Top-list",top_list),
+    path("Bottom-list",bottom_list),
+    path("Outer-list",outer_list),  
+    path("search_i",search_i),
+    path("product-info",product_info),
     path("admin/", admin.site.urls),
     path("api/account/", include('account.urls')),
     path("api/product/", include('product.urls')),
