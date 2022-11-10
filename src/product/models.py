@@ -4,6 +4,7 @@ from label.models import Attributes
 
 # Create your models here.
 
+
 class Product(models.Model):
     name = models.CharField(max_length=30)
     memo = models.TextField()
@@ -12,19 +13,18 @@ class Product(models.Model):
         User,
         on_delete=models.CASCADE,
     )
+    image = models.ImageField(blank=True, upload_to="images/")
 
-def image_upload_path(instance, filename):
-    return f'{instance.post.id}/{filename}'
-
+"""
 class Image(models.Model):
-    image = models.ImageField(blank=True, upload_to=image_upload_path, null=False)
+    image = models.ImageField(blank=True, upload_to="images/")
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
         related_name="image"
     )
     isThumbnail = models.BooleanField(default=False)    #썸네일 이미지인지.
-
+"""
 
 class Connection(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

@@ -1,8 +1,9 @@
 from .models import *
 from rest_framework import serializers
 
+"""
 class ImageSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(use_url=True)
+    #image = serializers.ImageField(use_url=True)
     #product = serializers.ReadOnlyField(source='product.id')
 
     class Meta:
@@ -12,7 +13,8 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    images = serializers.SerializerMethodField()
+    #images = serializers.SerializerMethodField()
+    images = ImageSerializer(many=True)
     #user = serializers.ReadOnlyField(source='user.username')
 
     def get_images(self, obj):
@@ -28,8 +30,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         #print(validated_data)
-        instance = Product.objects.create(**validated_data)
         image_set = self.context['request'].FILES
+        #image_set = validated_data.pop('images')
+        instance = Product.objects.create(**validated_data)
+        
         print(">> print image_set")
         print(image_set)
         isFirst = True
@@ -40,6 +44,15 @@ class ProductSerializer(serializers.ModelSerializer):
             else:
                 Image.objects.create(image=image_data, product=instance)
         return instance
+"""
+
+class ProductSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+        read_only_fields = ['seller']
 
 class ConnectionSerializer(serializers.ModelSerializer):
     class Meta:
