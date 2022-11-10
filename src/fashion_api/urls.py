@@ -39,9 +39,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/account/", include('account.urls')),
     path("api/product/", include('product.urls')),
-    #path("api/image/", include('image.urls')),
-    #path("api/analysis/", include('analysis.urls')),
-    #path("api/search/", include('search.urls')),
+    path("api/image/", include('image.urls')),
     path("api/label/", include('label.urls')),
     path("api/account/", include('account.urls')),
 ]

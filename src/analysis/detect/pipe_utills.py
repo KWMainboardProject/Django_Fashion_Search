@@ -29,7 +29,13 @@ test_print("FASHION_BASE_DIR :",FASHION_BASE_DIR)
 
  
 def search_label_attributes_class(type_id, name) -> int:
-    attr = Attributes.objects.get(type_id=type_id, data__class=name)
+    try:
+        attr = Attributes.objects.get(type_id=type_id, data__class=name)
+        return attr.id
+    except Attributes.DoesNotExist:
+        pass
+    
+    attr = Attributes.objects.filter(type_id=type_id).first()
     return attr.id
 
 class ImageCropPipe(One2OnePipe):
@@ -60,7 +66,7 @@ class SaveAttributesClassPipe(IPipeObserver):
     def push_src(self, input: PipeResource) -> None:
         self.src = input
         image_id = input.metadata["img_id"]
-        obj_idx = input.metadata["obj_id"]
+        obj_idx = input.dets[0]["obj_id"]
         attr_name = input.metadata["attributes_name"]
         attr_type = input.metadata["type_id"]
         attribute_id = search_label_attributes_class(attr_type, attr_name)

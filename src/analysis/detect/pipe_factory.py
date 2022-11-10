@@ -30,11 +30,13 @@ from pipe_cls import One2OnePipe, SplitMaincategory, IObserverPipe, ShallowCopyP
 from DetectObjectPipe import DetectObjectPipe
 from ClassficationPipe import ClassificationPipe
 from pipe_utills import ImageCropPipe, SaveAttributesClassPipe
+from Singleton import Singleton
 from model_weights import (
-    IWeight, OverallPatternClassficationWeight, OverallSubcategoryClassficationWeight,
-    OuterSubcategoryClassficationWeight, OuterPatternClassficationWeight,
-    BottomPatternClassficationWeight, BottomSubcategoryClassficationWeight,
-    TopPatternClassficationWeight, TopSubcategoryClassficationWeight
+    IWeight, OverallSubcategoryClassficationWeight, 
+    OuterSubcategoryClassficationWeight, 
+    BottomSubcategoryClassficationWeight, 
+    TopSubcategoryClassficationWeight, PatternClassficationWeight
+    #OverallPatternClassficationWeight, BottomPatternClassficationWeight, TopPatternClassficationWeight, OuterPatternClassficationWeight,
 )
 from detect_utills import (PipeResource, LoadImages,
                            copy_piperesource, is_test,
@@ -47,7 +49,11 @@ def test_print(s, s1="", s2="", s3="", s4="", s5="", end="\n"):
     if is_test_factory():
         print("factory pipe test : ", s, s1, s2, s3, s4, s5, end=end)
 
-
+class Factory(metaclass=Singleton):
+    def __init__(self, start_pipe=None, device='0', display = True):
+        self.pipe = pipe_factory(start_pipe=start_pipe, device=device, display=display)
+    
+    
 def pipe_factory(start_pipe=None, device='0', display = True):
     if display:
         print("initialize weights")
@@ -59,11 +65,16 @@ def pipe_factory(start_pipe=None, device='0', display = True):
     # splite - ( attributes save )s
     for i, label in enumerate(splite_main.idx2label):
         if display:
-            print(i, label, ": connect")
+            print(i, label, ": connect", end="")
         # img crop - repeat
         crop_pipe = ImageCropPipe()
         copy_pipe = ShallowCopyPipe()
         crop_pipe.connect_pipe(copy_pipe) # connect
+        
+        # # 패턴 카테고리 - 저장
+        # classfication_pipe = ClassificationPipe(PatternClassficationWeight(display=display, device=device))
+        # classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
+        # copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
         
         # find attribute - save attribute
         if label == "Overall":
@@ -72,10 +83,10 @@ def pipe_factory(start_pipe=None, device='0', display = True):
             classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
             copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
             
-            # 패턴 카테고리 - 저장
-            classfication_pipe = ClassificationPipe(OverallPatternClassficationWeight(display=display, device=device))
-            classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
-            copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
+            # # 패턴 카테고리 - 저장
+            # classfication_pipe = ClassificationPipe(OverallPatternClassficationWeight(display=display, device=device))
+            # classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
+            # copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
             
             # # 컬러 카테고리 - 저장
             # classfication_pipe = ClassificationPipe(ClassficationWeight(display=display, device=device))
@@ -87,10 +98,10 @@ def pipe_factory(start_pipe=None, device='0', display = True):
             classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
             copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
             
-            # 패턴 카테고리 - 저장
-            classfication_pipe = ClassificationPipe(BottomPatternClassficationWeight(display=display, device=device))
-            classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
-            copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
+            # # 패턴 카테고리 - 저장
+            # classfication_pipe = ClassificationPipe(BottomPatternClassficationWeight(display=display, device=device))
+            # classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
+            # copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
             
             # # 컬러 카테고리 - 저장
             # classfication_pipe = ClassificationPipe(ClassficationWeight(display=display, device=device))
@@ -102,10 +113,10 @@ def pipe_factory(start_pipe=None, device='0', display = True):
             classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
             copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
             
-            # 패턴 카테고리 - 저장
-            classfication_pipe = ClassificationPipe(TopPatternClassficationWeight(display=display, device=device))
-            classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
-            copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
+            # # 패턴 카테고리 - 저장
+            # classfication_pipe = ClassificationPipe(TopPatternClassficationWeight(display=display, device=device))
+            # classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
+            # copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
             
             # # 컬러 카테고리 - 저장
             # classfication_pipe = ClassificationPipe(ClassficationWeight(display=display, device=device))
@@ -117,15 +128,18 @@ def pipe_factory(start_pipe=None, device='0', display = True):
             classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
             copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
             
-            # 패턴 카테고리 - 저장
-            classfication_pipe = ClassificationPipe(OuterPatternClassficationWeight(display=display, device=device))
-            classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
-            copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
+            # # 패턴 카테고리 - 저장
+            # classfication_pipe = ClassificationPipe(OuterPatternClassficationWeight(display=display, device=device))
+            # classfication_pipe.connect_pipe(SaveAttributesClassPipe(display=display)) # find - save
+            # copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
             
             # # 컬러 카테고리 - 저장
             # classfication_pipe = ClassificationPipe(ClassficationWeight(display=display, device=device))
             # classfication_pipe.connect_pipe((display=display)) # find - save
             # copy_pipe.connect_pipe(classfication_pipe) # repeater - (find&save)
+        _ = splite_main.connect_pipe(crop_pipe)
+        if display:
+            print(_)
     
     #set start_pipe end_pipe
     if start_pipe is None:

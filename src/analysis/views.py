@@ -12,6 +12,7 @@ from time import sleep
 # add our project
 from .serializers import *
 
+from detect.pipe_factory import *
 
 # Create your views here.
 class AnalysisStateSViewSet(viewsets.ModelViewSet):
@@ -37,12 +38,32 @@ def test_make_attributes(img_id, t=1):
     detect_img.analysis_state="P"
     detect_img.save()
     print("======== start Process ============")
-    sleep(t*3)
+    
+    #set pipe
+    factory = Factory(device='0', display=False)
+    start_pipe = factory.pipe
+    
+    ### Dataloader ###
+    print(detect_img.img.path)
+    src = detect_img.img.path
+    dataset = LoadImages(src)
+    ### 실행 ###
+    for im0, path, s in dataset:
+        # set piperesource
+        metadata = {"path": path, "img_id":img_id}
+        images = {"origin":im0}
+        input = PipeResource(im=im0, metadata=metadata, images=images, s=s)
+        # push input
+        start_pipe.push_src(input)
+    
+    
+    
+    
     print("======== detect done ============")
-    image_attributes(image_id=img_id, attribute_id=23, obj_idx=1).save() # 반팔
-    image_attributes(image_id=img_id, attribute_id=33, obj_idx=1).save() # 프린팅
-    image_attributes(image_id=img_id, attribute_id=185, obj_idx=1).save() # 반팔
-    image_attributes(image_id=img_id, attribute_id=211, obj_idx=1).save() # 반팔
+    # image_attributes(image_id=img_id, attribute_id=23, obj_idx=1).save() # 반팔
+    # image_attributes(image_id=img_id, attribute_id=33, obj_idx=1).save() # 프린팅
+    # image_attributes(image_id=img_id, attribute_id=185, obj_idx=1).save() # 반팔
+    # image_attributes(image_id=img_id, attribute_id=211, obj_idx=1).save() # 반팔
     detect_img.analysis_state="D"
     detect_img.save()
     print("======== save attributes ============")

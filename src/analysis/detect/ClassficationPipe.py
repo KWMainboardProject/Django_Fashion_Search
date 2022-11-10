@@ -104,6 +104,8 @@ class ClassificationPipe(One2OnePipe):
             output = model(im[None, ...])
             probs = torch.nn.functional.softmax(output, dim=1)
             conf, preds = torch.max(probs, 1)
+            test_print(preds[0], len(self.cls))
+            test_print(self.cls[preds[0]])
             result = self.cls[preds[0]]
             test_print("result) ", result)
         t3 = time_sync()
@@ -112,7 +114,9 @@ class ClassificationPipe(One2OnePipe):
         input.metadata["type_id"] = self.attribute_type_id
         input.metadata["attributes_name"] = result
         input.metadata["attributes_index"] = preds[0]
-        input.metadata["attributes_data_type"] = 0 #class
+        input.metadata["attributes_data_type"] = 1 #class
+        if self.display:
+            input.print()
         return input
 
     def get_regist_type(self, idx=0) -> str:

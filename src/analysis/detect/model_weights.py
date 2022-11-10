@@ -33,7 +33,7 @@ def is_test_Weight()->bool:
 
 def test_print(s, s1="", s2="", s3="", s4="", s5="", end="\n"):
     if is_test_Weight():
-        print("detect object pipe test : ", s, s1, s2, s3, s4, s5, end=end)
+        print("weight pipe test : ", s, s1, s2, s3, s4, s5, end=end)
 
 ############################
 class IWeight:
@@ -67,7 +67,10 @@ class IWeight:
 
         # weight2gpu
         model = torch.load(self.WEIGHTS)
-        model.eval()
+        # if is_test_Weight():
+        #     print(model)
+        try:             model.eval()
+        except: pass
         model = model.to(self.device)
         self.model = model
         t2 = time.time()
@@ -115,6 +118,26 @@ class OuterSubcategoryClassficationWeight(IWeight, metaclass=Singleton):
     ATTRBUTES_TYPE_ID = 13
     def __init__(self, display=True, conf_thres=0.25, imgsz=(224, 224), device='0', cls=None, weights_path=None, name=None, id=None) -> None:
         super().__init__(display, conf_thres, imgsz, device, cls, weights_path, name, id)
+        
+class PatternClassficationWeight(IWeight, metaclass=Singleton):
+    cls=[
+            "animal", 
+            "argyle", 
+            "camouflage", 
+            "check", 
+            "dot", 
+            "lettering",
+            "printing", 
+            "solid",
+            "stripe",
+            "tropical"
+        ]
+    WEIGHTS=WEIGHT_DIR / "pattern.pt"
+    NAME="Resnet34 Pattern Classicication"
+    ATTRBUTES_TYPE_ID = 2
+    def __init__(self, display=True, conf_thres=0.25, imgsz=(224, 224), device='0', cls=None, weights_path=None, name=None, id=None) -> None:
+        super().__init__(display, conf_thres, imgsz, device, cls, weights_path, name, id)
+"""       
 class OverallPatternClassficationWeight(IWeight, metaclass=Singleton):
     cls=[
             "animal", 
@@ -178,3 +201,5 @@ class OuterPatternClassficationWeight(IWeight, metaclass=Singleton):
     ATTRBUTES_TYPE_ID = 14
     def __init__(self, display=True, conf_thres=0.25, imgsz=(224, 224), device='0', cls=None, weights_path=None, name=None, id=None) -> None:
         super().__init__(display, conf_thres, imgsz, device, cls, weights_path, name, id)
+        
+"""
