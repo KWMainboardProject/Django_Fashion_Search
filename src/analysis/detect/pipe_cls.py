@@ -1,10 +1,11 @@
 from abc import *
 from pickle import NONE
 
+from random import randrange
 import time
 import sys
 
-from detect_utills import PipeResource, xyxy2xywh, copy_piperesource, is_test
+from detect_utills import PipeResource, LOGGER, xyxy2xywh, copy_piperesource, is_test
 def is_test_pipe_cls()->bool:
     return False and is_test()
 
@@ -261,10 +262,10 @@ class ConvertToxywhPipe(One2OnePipe):
         for det in dets:
             xyxy = [det["xmin"],det["ymin"],det["xmax"],det["ymax"]]
             xywh = xyxy2xywh(xyxy)
-            det["xmin"] = xywh[0]
-            det["ymin"] = xywh[1]
-            det["xmax"] = xywh[2]
-            det["ymax"] = xywh[3]
+            det["x"] = xywh[0]
+            det["y"] = xywh[1]
+            det["w"] = xywh[2]
+            det["h"] = xywh[3]
         # test_print("++++++++++++++convert xywh+++++++++++++++++")
         # input.print(on=is_test())
         return input
@@ -378,18 +379,13 @@ class SplitMaincategory(SplitKey):
 #########################==================test case=============================
 
 class PassPipe(One2OnePipe):
-    def __init__(self) -> None:
+    def __init__(self, display=True) -> None:
         super().__init__()
-        self.istest = is_test_pipe_cls()
+        self.display = display
     
     def exe(self, input: PipeResource) -> PipeResource:
-        if self.istest:
-            try:
-                for i, det in enumerate(input.dets):
-                    det["test"] = True
-            except KeyboardInterrupt:sys.exit()
-            except:
-                test_print("error : PassPipe")
+        if self.display:
+            LOGGER.info(f'{input.s}')
         return input
     
     def get_regist_type(self, idx=0) -> str:

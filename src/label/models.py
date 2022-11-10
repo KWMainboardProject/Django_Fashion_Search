@@ -26,7 +26,7 @@ class Attributes(Model):
     # color{ "type":"color", "color":[200, 15, 170], "persent":40 }
 
 class AttributeTable(DBView):
-    # id =  models.OneToOneField(to="Attributes", primary_key=True, on_delete=models.DO_NOTHING, verbose_name="Attributes ID")
+    id =  models.OneToOneField(to="Attributes", primary_key=True, on_delete=models.DO_NOTHING, verbose_name="Attributes ID")
     maincategory = models.CharField(max_length=20, verbose_name="Main Category")
     attributes = models.CharField(max_length=20, verbose_name="Attributes")
     data = models.JSONField(default=dict, verbose_name="Data JSON")
@@ -39,6 +39,7 @@ class AttributeTable(DBView):
                 "type__name", 
                 "data"
                 ).annotate(
+                    id = F("id"),
                     maincategory=F("type__main__name"), 
                     attributes=F("type__name")
                     ).all().query
@@ -48,7 +49,7 @@ class AttributeTable(DBView):
         db_table = "AttributeTable"
 
 class AttributeIndexTable(DBView):
-    # id =  models.OneToOneField(to="Attributes", primary_key=True, on_delete=models.DO_NOTHING, verbose_name="Attributes ID")
+    id =  models.OneToOneField(to="Attributes", primary_key=True, on_delete=models.DO_NOTHING, verbose_name="Attributes ID")
     maincategory = models.ForeignKey(to="Maincategory", on_delete=models.DO_NOTHING, verbose_name="Main Category ID")
     attributes = models.ForeignKey(to="AttributesType", on_delete=models.DO_NOTHING, verbose_name="Attributes ID")
     data = models.JSONField(default=dict, verbose_name="Data JSON")
@@ -61,6 +62,7 @@ class AttributeIndexTable(DBView):
                 "type_id", 
                 "data"
                 ).annotate(
+                    id = F("id"),
                     maincategory_id=F("type__main_id"), 
                     attributes_id=F("type_id")
                     ).all().query

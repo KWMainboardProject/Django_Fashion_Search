@@ -2,44 +2,44 @@ import torch
 import argparse
 import time
 
-from yolov5.utils.torch_utils import select_device, time_sync
-from yolov5.utils.general import (check_img_size, non_max_suppression, scale_coords, cv2, xyxy2xywh)
-from yolov5.utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadStreams
-from yolov5.models.common import DetectMultiBackend
-
-
 # set path
 import sys
 from pathlib import Path
 import os
 
 FILE = Path(__file__).resolve()
-ROOT = FILE.parents
-WEIGHT_DIR = None
+ROOT = FILE.parent
+tmp = ROOT / "yolov5"
+if str(tmp) not in sys.path and os.path.isabs(tmp):
+    sys.path.append(str(tmp))  # add ROOT to PATH
 
+WEIGHT_DIR = None
 FASHION_BASE_DIR=Path(__file__).resolve().parent.parent.parent
 tmp = FASHION_BASE_DIR / 'weights'
 if str(tmp) not in sys.path and os.path.isabs(tmp):
-    WEIGHT_DIR= (str(tmp))  # add Weights ROOT to PATH
+    WEIGHT_DIR= (tmp)  # add Weights ROOT to PATH
+
 
 # import my project
 from Singleton import Singleton
 from pipe_cls import One2OnePipe, SplitMaincategory, ResourceBag
-from detect_utills import PipeResource, make_padding_image, copy_piperesource, Annotator, colors, save_one_box, LOGGER, is_test
+from detect_utills import (PipeResource, LoadImages, print_args,
+                           make_padding_image, copy_piperesource,
+                           LOGGER, is_test, Annotator, cv2,
+                           select_device, time_sync,
+                           check_img_size, non_max_suppression, xyxy2xywh, scale_boxes,
+                           DetectMultiBackend)
 
 def is_test_detect_object()->bool:
-    return False and is_test()
+    return True and is_test()
 
 def test_print(s, s1="", s2="", s3="", s4="", s5="", end="\n"):
     if is_test_detect_object():
         print("detect object pipe test : ", s, s1, s2, s3, s4, s5, end=end)
-test_print(sys.path)
 
 
 ############################
-
-
-
+from threading import Lock
 class DetectObjectWeight(metaclass=Singleton):
     def __init__(
         self,
@@ -53,7 +53,7 @@ class DetectObjectWeight(metaclass=Singleton):
         # 고정값
         WEIGHTS = WEIGHT_DIR / "FashionDetector.pt"
         self.yolo_weights = WEIGHTS
-        self.device = select_device(device)
+        self.device = select_device(model_name="YOLOv5", device=device)
         
         # 변하는 값(입력 값)
         self.conf_thres = conf_thres
@@ -62,6 +62,7 @@ class DetectObjectWeight(metaclass=Singleton):
         # classes = None  # filter by class: --class 0, or --class 0 2 3
         self.cls = cls
         self.imgsz = imgsz  # inference size (height, width)
+        self.lock = Lock()
         
         ### load model ###
         self.model = DetectMultiBackend(
@@ -87,10 +88,11 @@ class DetectObjectPipe(One2OnePipe):
         self.iou_thres = instance.iou_thres
         self.max_det = instance.max_det
         self.imgsz = instance.imgsz
+        self.model_instance = instance
         
         t2 = time.time()
         if display:
-            LOGGER.info( f'[YOLOv5 init {(t2-t1):.1f}s]')
+            print( f'[YOLOv5 init {(t2-t1):.1f}s]')
     
         
     @torch.no_grad()
@@ -114,7 +116,7 @@ class DetectObjectPipe(One2OnePipe):
 
         t1 = time_sync()
         
-        im = make_padding_image(input.im) # add padding
+        im = make_padding_image(input.im) # add padding\
         im = torch.from_numpy(im).to(device)
         im = im.float()  # im.half() if half else im.float()  # uint8 to fp16/32
         im /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -124,7 +126,8 @@ class DetectObjectPipe(One2OnePipe):
         dt[0] += t2 - t1
 
         # Inference
-        pred = model(im, augment=False, visualize=visualize)
+        with self.model_instance.lock:
+            pred = model(im, augment=False, visualize=visualize)
         t3 = time_sync()
         dt[1] += t3 - t2
 
@@ -136,19 +139,21 @@ class DetectObjectPipe(One2OnePipe):
         # Process detections
         for i, det in enumerate(pred):  # detections per image
             seen += 1
-
+            if len(det):
+                # Rescale boxes from img_size to im0 size
+                det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], input.im.shape).round()
             ## output 설정 ###
-            for i in range(det.shape[0]):
-                output_det = {"xmin": int(det[i][0]), "ymin": int(det[i][1]), "xmax": int(
-                    det[i][2]), "ymax": int(det[i][3]), "conf": float(det[i][4]), "cls": int(det[i][5])}
+            for xmin, ymin, xmax, ymax, conf, cls in reversed(det):
+                output_det = {"xmin": int(xmin), "ymin": int(ymin), "xmax": int(
+                    xmax), "ymax": int(ymax), "conf": float(conf), "Maincategory": int(cls)}
                 input.dets.append(output_det)
 
         output = copy_piperesource(input)
         t2 = time.time()
-        detect_len = output.len_detkey_match("cls", "1")
-        detect_len = "" if detect_len == 3 else f"(det ball :{str(detect_len)})"
         if self.display:
-            LOGGER.info(f'[{detect_len}YOLOv5 run {t2-t1:.3f}s]')
+            detect_len = output.len_detkey_match("Maincategory", "1")
+            detect_len = "" if detect_len == 3 else f"(det fashion :{str(detect_len)})"
+            print(f'[{detect_len}YOLOv5 run {t2-t1:.3f}s]')
         
         output.print(on=(is_test_detect_object() and output.__len__() < 7))
         return output
@@ -156,33 +161,28 @@ class DetectObjectPipe(One2OnePipe):
     def get_regist_type(self, idx=0) -> str:
         return "det_maincategory"
 
-def test(src, device):
-    ### Pipe 생성 & 연결 ###
-    detectObjectPipe1 = DetectObjectPipe(device=device)
-    split_cls = SplitMaincategory()
-    detectObjectPipe1.connect_pipe(split_cls)
-
-    ### SplitCls 생성 & 연결 ###
+def test(src, device, display=True):
+    ### Pipe 생성###
+    detectObjectPipe1 = DetectObjectPipe(device=device, display=display)
     bag_split = ResourceBag()
     
+    # 파이프 연결
+    detectObjectPipe1.connect_pipe(bag_split)
     ### Dataloader ###
-    source = src
-    imgsz = (640, 640)
-    pt = True
-    stride = 32
-    nr_sources = 1
-
-    dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
-    vid_path, vid_writer, txt_path = [
-        None] * nr_sources, [None] * nr_sources, [None] * nr_sources
-
+    dataset = LoadImages(src)
     ### 실행 ###
-    for frame_idx, (path, im, im0s, vid_cap, s) in enumerate(dataset):
-        input = PipeResource(f_num=frame_idx, path=path,
-                             im=im, im0s=im0s, vid_cap=vid_cap, s=s)
+    for im0, path, s in dataset:
+        metadata = {"path": path}
+        images = {"origin":im0}
+        input = PipeResource(im=im0, metadata=metadata, images=images, s=s)
         detectObjectPipe1.push_src(input)
     
-    bag_split.print()
+    if display:
+        for src in bag_split.src_list:
+            src.imshow(name="hellow")
+            cv2.waitKey(1000)
+    else :
+        bag_split.print()
 
 def test_singleton():
     gpu = DetectObjectPipe(device="cpu")
@@ -192,15 +192,15 @@ def test_singleton():
     #print(id(cpu.model))
 
 def runner(args):
-    pass
-    # test(args.src, args.device)
-    #runascapp(args.src, args.device)
+    print_args(vars(args))
+    test(args.src, args.device, args.display)
     #test_singleton()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--src', default= (FASHION_BASE_DIR / "media" / "test"))
     parser.add_argument('--device', default='0', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+    parser.add_argument('--display', action="store_true")
     args = parser.parse_args()
     runner(args) 
 

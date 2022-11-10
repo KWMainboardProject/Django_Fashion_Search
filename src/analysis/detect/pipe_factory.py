@@ -7,7 +7,7 @@ FILE = Path(__file__).resolve()
 ROOT = FILE.parents
 
 
-from yolov5.utils.dataloaders import VID_FORMATS, LoadImages, LoadStreams
+from yolov5.utils.dataloaders import LoadImages, LoadStreams
 from DetectObjectPipe import DetectObjectPipe
 from pipe_cls import IObserverPipe, ConvertToxywhPipe, PipeResource, ResourceBag, SplitMaincategory, SplitIdx, FirstCopyPipe, StartNotDetectCutterPipe, xyxy2xywh, test_print
 
