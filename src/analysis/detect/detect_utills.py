@@ -153,7 +153,11 @@ class PipeResource:
     def print(self, on=True):
         if on:
             print("==============================================")
-            print(f'{self.s}',"dets")
+            print(f'{self.s}')
+            print("Metadata : ", end="")
+            for key, value in self.metadata.items():
+                print(f"['{key}':'{value}']", end=" ")
+            print("\ndets")
             for i, det in enumerate(self.dets):
                 print(f'det {i} :', det)
             print("==============================================")
@@ -186,26 +190,38 @@ class PipeResource:
         det["conf"] = conf
         self.dets.append(det)
             
-    def imshow(self, name="no name", idx_names=["1","2","3","4","5","6"],cls_names=["Overall", "Bottom", "Top", "Outer","Shose"],line_thickness=2, hide_labels=True, hide_conf = True):
-        im0= self.images["origin"]
+    def imshow(self, name=None, images="origin", metadata=[], dets_key=["Maincategory"], line_thickness=2, hide_box=False, hide_labels=False):
+        im0= self.images[images]
         annotator = Annotator(
-            im0, line_width=line_thickness, example=str(cls_names))
-        # Write results
-        for i, det in enumerate(self.dets):
-            c = int(det["Maincategory"])  # integer class
-            id = ""
+            im0, line_width=line_thickness)
+        
+        # metadata 이름
+        base_s = ""
+        for key in metadata:
             try:
-               id = f"{idx_names[int(det['id'])]} "
-            except KeyboardInterrupt:sys.exit()
+                base_s += f"({self.metadata[key]})"
             except:
                 pass
-            label = None if hide_labels else (f"{id}{cls_names[c]}" if hide_conf else f'{cls_names[c]} {det["conf"]:.2f}')
-            xyxy = [det["xmin"], det["ymin"], det["xmax"], det["ymax"]]
-            annotator.box_label(xyxy, label, color=colors(c, True))
+        # Write results
+        if hide_box:pass
+        else:
+            for i, det in enumerate(self.dets):
+                s = ""
+                for key in dets_key:
+                    try:
+                        s += f'({str(det[key])})'
+                    except: pass
+                try:
+                    label = None if hide_labels else (f"{s}")
+                    xyxy = [det["xmin"], det["ymin"], det["xmax"], det["ymax"]]
+                    annotator.box_label(xyxy, label, color=colors(i*5, True))
+                except:
+                    pass
         im0 = annotator.result()
-        cv2.namedWindow(name, cv2.WINDOW_NORMAL)
-        cv2.resizeWindow(name, im0.shape[1], im0.shape[0])
-        cv2.imshow(name, im0)
+        window_name = base_s if name is None else str(name)
+        cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+        cv2.resizeWindow(window_name, im0.shape[1], im0.shape[0])
+        cv2.imshow(window_name, im0)
         
     def is_detkey(self, key = "id") ->bool:
         try:

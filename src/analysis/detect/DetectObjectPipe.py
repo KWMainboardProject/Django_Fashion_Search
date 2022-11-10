@@ -74,7 +74,8 @@ class DetectObjectWeight(metaclass=Singleton):
         
         self.model.warmup(imgsz=(1, 3, *self.imgsz))  # warmup
 
-class DetectObjectPipe(One2OnePipe):  
+class DetectObjectPipe(One2OnePipe):
+    cls_names=["Overall", "Bottom", "Top", "Outer","Shose"]  
     def __init__(self, device, display=True):
         super().__init__()
         self.display = display
@@ -88,6 +89,7 @@ class DetectObjectPipe(One2OnePipe):
         self.iou_thres = instance.iou_thres
         self.max_det = instance.max_det
         self.imgsz = instance.imgsz
+        self.lock = instance.lock
         self.model_instance = instance
         
         t2 = time.time()
@@ -114,6 +116,8 @@ class DetectObjectPipe(One2OnePipe):
         iou_thres = self.iou_thres
         max_det = self.max_det
 
+
+        # Preprocess
         t1 = time_sync()
         
         im = make_padding_image(input.im) # add padding\
@@ -126,7 +130,7 @@ class DetectObjectPipe(One2OnePipe):
         dt[0] += t2 - t1
 
         # Inference
-        with self.model_instance.lock:
+        with self.lock :
             pred = model(im, augment=False, visualize=visualize)
         t3 = time_sync()
         dt[1] += t3 - t2
@@ -145,7 +149,7 @@ class DetectObjectPipe(One2OnePipe):
             ## output 설정 ###
             for xmin, ymin, xmax, ymax, conf, cls in reversed(det):
                 output_det = {"xmin": int(xmin), "ymin": int(ymin), "xmax": int(
-                    xmax), "ymax": int(ymax), "conf": float(conf), "Maincategory": int(cls)}
+                    xmax), "ymax": int(ymax), "conf": float(conf), "Maincategory": int(cls), "Maincategory_name":self.cls_names[int(cls)]}
                 input.dets.append(output_det)
 
         output = copy_piperesource(input)
@@ -179,7 +183,7 @@ def test(src, device, display=True):
     
     if display:
         for src in bag_split.src_list:
-            src.imshow(name="hellow")
+            src.imshow(name="hihi", metadata=["path"], dets_key=["Maincategory_name"])
             cv2.waitKey(1000)
     else :
         bag_split.print()
