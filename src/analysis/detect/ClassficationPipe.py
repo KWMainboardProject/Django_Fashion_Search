@@ -112,6 +112,7 @@ class ClassificationPipe(One2OnePipe):
         input.metadata["type_id"] = self.attribute_type_id
         input.metadata["attributes_name"] = result
         input.metadata["attributes_index"] = preds[0]
+        input.metadata["attributes_data_type"] = 0 #class
         return input
 
     def get_regist_type(self, idx=0) -> str:

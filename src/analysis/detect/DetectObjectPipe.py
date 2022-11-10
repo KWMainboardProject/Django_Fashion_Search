@@ -93,8 +93,7 @@ class DetectObjectPipe(One2OnePipe):
         self.model_instance = instance
         
         t2 = time.time()
-        if display:
-            print( f'[YOLOv5 init {(t2-t1):.1f}s]')
+        print( f'[YOLOv5 init {(t2-t1):.1f}s]')
     
         
     @torch.no_grad()
@@ -148,8 +147,15 @@ class DetectObjectPipe(One2OnePipe):
                 det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], input.im.shape).round()
             ## output 설정 ###
             for xmin, ymin, xmax, ymax, conf, cls in reversed(det):
-                output_det = {"xmin": int(xmin), "ymin": int(ymin), "xmax": int(
-                    xmax), "ymax": int(ymax), "conf": float(conf), "Maincategory": int(cls), "Maincategory_name":self.cls_names[int(cls)]}
+                output_det = {
+                    "obj_id": int(i),
+                    "xmin": int(xmin),
+                    "ymin": int(ymin),
+                    "xmax": int(xmax), 
+                    "ymax": int(ymax),
+                    "conf": float(conf),
+                    "Maincategory": int(cls),
+                    "Maincategory_name":self.cls_names[int(cls)]}
                 input.dets.append(output_det)
 
         output = copy_piperesource(input)

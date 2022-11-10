@@ -1,6 +1,6 @@
 # python manage.py shell_plus --print-sql
 from label.models import * 
-from django.contrib.auth.models import User
+from account.models import User
 
 def is_debug_setting()->bool:
     return True

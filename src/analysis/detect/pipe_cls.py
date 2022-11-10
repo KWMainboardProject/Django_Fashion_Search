@@ -325,7 +325,7 @@ class ResourceBag(IPipeObserver):
         return contents
 
 
-class CopyPipe(RepeatPipe):
+class ShallowCopyPipe(RepeatPipe):
     def __init__(self) -> None:
         super().__init__()
     
@@ -450,7 +450,7 @@ def test_repeat_pipe():
     print("input")
     src.print()
     
-    p_pipe = CopyPipe()
+    p_pipe = ShallowCopyPipe()
     output = p_pipe.exe(src)
     print("exe output")
     output.print()
