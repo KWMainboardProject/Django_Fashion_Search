@@ -1,5 +1,5 @@
-from django.shortcuts import render
-
+from django.shortcuts import render,redirect
+from account import views
 def index(request):
     return render(request, 'fashion_api/index.html')
 
@@ -18,6 +18,9 @@ def signup(request):
 def search_i(request):
     return render(request, 'fashion_api/search_i.html')
 
+def search_r(request):
+    return render(request, 'fashion_api/search_r.html')    
+
 def outer_list(request):
     return render(request, 'fashion_api/outer_list.html')
 
@@ -32,3 +35,6 @@ def top_list(request):
 
 def product_info(request):
     return render(request, 'fashion_api/product-info.html')
+
+def jump(request):
+    return redirect('../..')
