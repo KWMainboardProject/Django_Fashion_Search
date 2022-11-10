@@ -14,27 +14,30 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth import views
 from django.urls import path, include
 from django.views.generic import RedirectView
-
+from account import views as vi
 # from django.views import index,blog,post
 from fashion_api.views import index, about
 
 # from django.views import index,blog,post
-from fashion_api.views import index, about, create, login, signup, search_i, overall_list, outer_list, bottom_list, top_list, product_info
+from fashion_api.views import index, about, create, login, signup, search_i, overall_list, outer_list, bottom_list, top_list, product_info, jump
 
 urlpatterns = [
     path("",index),
     path("index",index),
     path("about",about),
     path("create",create),
-    path("login",login),
-    path("signup",signup),
+    path('^login/$',include("rest_framework.urls")),
+    path("signup",vi.UserCreate.as_view()),
+    path('login', views.LoginView.as_view(template_name='rest_framework/login.html'), name='login'),
     path("Overall-list",overall_list),
     path("Top-list",top_list),
     path("Bottom-list",bottom_list),
     path("Outer-list",outer_list),  
     path("search_i",search_i),
+    path("accounts/profile/",jump),
     path("product-info",product_info),
     path("admin/", admin.site.urls),
     path("api/account/", include('account.urls')),
