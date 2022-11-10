@@ -50,7 +50,7 @@ def test_rank_result(image_id, maincategory_id, t=1):
         # 특정 속성 추출
         target_attr = attr.attributes
         # 타겟 속성으로 검색
-        product_attributes_list = ProductAttributes.objects.filter(attribute_id = target_attr)
+        product_attributes_list = Connection.objects.filter(attribute_id = target_attr)
         
         for product_attribute in product_attributes_list:
             print("Product : ", product_attribute, product_attribute.product)

@@ -5,7 +5,7 @@ from django.db.models import CASCADE, Model, F
 from label.models import Maincategory, Attributes, AttributeIndexTable
 from image.models import request_image
 from analysis.models import image_attributes, ImageAttributesTable
-from product.models import Product, ProductAttributes
+from product.models import Product, Connection
 from fashion_api.settings import BASE_DIR, MEDIA_ROOT
 
 # Create your models here.

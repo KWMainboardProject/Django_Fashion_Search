@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+SERVER_IP = '192.168.0.8'
+
 import json
 import os
 import sys
@@ -36,7 +38,7 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','192.168.0.214', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1',f'{SERVER_IP}', 'localhost']
 
 
 # Application definition
@@ -126,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = [
-    # 'http://222.112.170.70:3333',
+    f'http://{SERVER_IP}:8000',
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',

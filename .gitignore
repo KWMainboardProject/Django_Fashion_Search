@@ -131,3 +131,10 @@ dmypy.json
 # our file
 src/secrets.json
 src/weights
+src/db.sqlite3
+src/account/migrations
+src/analysis/migrations
+src/image/migrations
+src/label/migrations
+src/product/migrations
+src/search/migrations
