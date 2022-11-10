@@ -1,4 +1,4 @@
-{ %load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -76,7 +76,7 @@
                                 </ul>
                             </li>
                             <li class="nav-item"><a class="nav-link" href="create">Product Register</a></li>
-                            <li name="nav_myproducts" class="nav-item"><a class="nav-link" href="myProduct-list.php" style="display: none;">My Products</a></li>
+                            <li name="nav_myproducts" class="nav-item"><a class="nav-link" href="myProduct-list" style="display: none;">My Products</a></li>
                         </ul>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                                                 Is this the picture you are looking for?
                                             </div>
                                             <div class="modal-footer">
-                                                <a href="Image_result.php">
+                                                <a href="search_r">
                                                     <button type="button" class="btn btn-primary" onclick="file_frm_submit(this.form)">Yes</button>
                                                 </a>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>

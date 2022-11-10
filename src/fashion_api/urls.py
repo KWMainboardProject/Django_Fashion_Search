@@ -22,14 +22,14 @@ from account import views as vi
 from fashion_api.views import index, about
 
 # from django.views import index,blog,post
-from fashion_api.views import index, about, create, login, signup, search_i, overall_list, outer_list, bottom_list, top_list, product_info, jump
+from fashion_api.views import index, about, create, login, signup, search_i, overall_list, outer_list, bottom_list, top_list, product_info, jump, search_r
 
 urlpatterns = [
     path("",index),
     path("index",index),
     path("about",about),
     path("create",create),
-    path('^login/$',include("rest_framework.urls")),
+    path("search_r",search_r),
     path("signup",vi.UserCreate.as_view()),
     path('login', views.LoginView.as_view(template_name='rest_framework/login.html'), name='login'),
     path("Overall-list",overall_list),

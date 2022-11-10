@@ -18,6 +18,9 @@ def signup(request):
 def search_i(request):
     return render(request, 'fashion_api/search_i.html')
 
+def search_r(request):
+    return render(request, 'fashion_api/search_r.html')    
+
 def outer_list(request):
     return render(request, 'fashion_api/outer_list.html')
 
