@@ -69,8 +69,8 @@ INSTALLED_APPS = [
     "account",
     
     #Add yolo
-    "analysis.detect",
-    "analysis.detect.yolov5",
+    "detect",
+    "detect.yolov5",
 ]
 
 MIDDLEWARE = [

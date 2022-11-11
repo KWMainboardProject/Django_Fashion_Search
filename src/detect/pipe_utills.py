@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 import os
 
-FASHION_BASE_DIR=Path(__file__).resolve().parent.parent.parent
+FASHION_BASE_DIR=Path(__file__).resolve().parent.parent
 tmp = FASHION_BASE_DIR
 if str(tmp) not in sys.path and os.path.isabs(tmp):
     sys.path.append(str(tmp))  # add ROOT to PATH

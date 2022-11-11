@@ -13,8 +13,12 @@ tmp = ROOT / "yolov5"
 if str(tmp) not in sys.path and os.path.isabs(tmp):
     sys.path.append(str(tmp))  # add ROOT to PATH
 
+
+YOLO_PY = Path(__file__).resolve().parent / "yolov5"
+
+# weight
 WEIGHT_DIR = None
-FASHION_BASE_DIR=Path(__file__).resolve().parent.parent.parent
+FASHION_BASE_DIR=Path(__file__).resolve().parent.parent
 tmp = FASHION_BASE_DIR / 'weights'
 if str(tmp) not in sys.path and os.path.isabs(tmp):
     WEIGHT_DIR= (tmp)  # add Weights ROOT to PATH
@@ -51,8 +55,8 @@ class DetectObjectWeight(metaclass=Singleton):
         device = '0'
         ) -> None:
         # 고정값
-        WEIGHTS = WEIGHT_DIR / "FashionDetector.pt"
-        self.yolo_weights = WEIGHTS
+        WEIGHTS = "FashionDetector.pt"
+        self.yolo_weights = WEIGHT_DIR / WEIGHTS
         self.device = select_device(model_name="YOLOv5", device=device)
         
         # 변하는 값(입력 값)
@@ -65,14 +69,17 @@ class DetectObjectWeight(metaclass=Singleton):
         self.lock = Lock()
         
         ### load model ###
-        self.model = DetectMultiBackend(
-            self.yolo_weights, device=self.device, dnn=False, data=None, fp16=False)
+        model = torch.hub.load(str(YOLO_PY), "custom", path=str(self.yolo_weights) , source="local")
+        model = model.to(self.device)
+        self.model = model
+        #  self.model = DetectMultiBackend(
+        #     self.yolo_weights, device=self.device, dnn=False, data=None, fp16=False)
         ############
         
         self.imgsz = check_img_size(
-            self.imgsz, s=self.model.stride)  # check image size
+            self.imgsz, s=32)  # check image size
         
-        self.model.warmup(imgsz=(1, 3, *self.imgsz))  # warmup
+        # self.model.warmup(imgsz=(1, 3, *self.imgsz))  # warmup
 
 class DetectObjectPipe(One2OnePipe):
     cls_names=["Overall", "Bottom", "Top", "Outer","Shose"]  
@@ -109,6 +116,7 @@ class DetectObjectPipe(One2OnePipe):
         # 고정 값
         device = self.device
         model = self.model
+        imgsz = self.imgsz
         dt, seen = [0.0, 0.0, 0.0, 0.0], 0
 
         conf_thres = self.conf_thres
@@ -130,7 +138,8 @@ class DetectObjectPipe(One2OnePipe):
 
         # Inference
         with self.lock :
-            pred = model(im, augment=False, visualize=visualize)
+            pred = model(im, size=imgsz)
+            # pred = model(im, augment=False, visualize=visualize)
         t3 = time_sync()
         dt[1] += t3 - t2
 

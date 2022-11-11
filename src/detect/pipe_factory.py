@@ -20,7 +20,7 @@ tmp = ROOT / "yolov5"
 if str(tmp) not in sys.path and os.path.isabs(tmp):
     sys.path.append(str(tmp))  # add ROOT to PATH
 
-FASHION_BASE_DIR=Path(__file__).resolve().parent.parent.parent
+FASHION_BASE_DIR=Path(__file__).resolve().parent.parent
 tmp = FASHION_BASE_DIR
 if str(tmp) not in sys.path and os.path.isabs(tmp):
     sys.path.append(str(tmp))  # add ROOT to PATH
@@ -150,6 +150,35 @@ def pipe_factory(start_pipe=None, device='0', display = True):
         raise TypeError("TypeError in pipe_factory")
     return start_pipe
 
+def running_detector(
+    device='0', 
+    display=True):
+    start_pipe = pipe_factory(device=device, display=display)
+    
+    src = list()
+    id_list = list()
+    
+    # 아직 처리 안된 요청 확인
+    undefine_request_list = request_image.objects.filter(analysis_state="U")
+    
+    for request in undefine_request_list:
+        id, path = request.img_id, request.img.path
+        id_list.append(id)
+        src.append(path)
+        print(id, path)
+    
+    ### Dataloader ###
+    dataset = LoadImages(src)
+    ### 실행 ###
+    for im0, path, s, id in dataset, id_list:
+        # set piperesource
+        metadata = {"path": path, "img_id":id}
+        images = {"origin":im0}
+        input = PipeResource(im=im0, metadata=metadata, images=images, s=s)
+        # push input
+        start_pipe.push_src(input)
+    
+
 def test(src=FASHION_BASE_DIR / "media" / "test", 
          device='0', 
          display=True
@@ -177,7 +206,8 @@ def test(src=FASHION_BASE_DIR / "media" / "test",
     
 def runner(args):
     print_args(vars(args))
-    test(args.src, args.device, args.display)
+    # test(args.src, args.device, args.display)
+    running_detector(args.device, args.display)
     #run(args.src, args.device)
     # detect(args.src, args.device)
     

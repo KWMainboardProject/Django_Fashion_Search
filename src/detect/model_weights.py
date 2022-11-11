@@ -17,7 +17,7 @@ ROOT = FILE.parent
 #     sys.path.append(str(tmp))  # add ROOT to PATH
 
 WEIGHT_DIR = None
-FASHION_BASE_DIR=Path(__file__).resolve().parent.parent.parent
+FASHION_BASE_DIR=Path(__file__).resolve().parent.parent
 tmp = FASHION_BASE_DIR / 'weights'
 if str(tmp) not in sys.path and os.path.isabs(tmp):
     WEIGHT_DIR= (tmp)  # add Weights ROOT to PATH
@@ -137,7 +137,7 @@ class PatternClassficationWeight(IWeight, metaclass=Singleton):
     ATTRBUTES_TYPE_ID = 2
     def __init__(self, display=True, conf_thres=0.25, imgsz=(224, 224), device='0', cls=None, weights_path=None, name=None, id=None) -> None:
         super().__init__(display, conf_thres, imgsz, device, cls, weights_path, name, id)
-"""       
+
 class OverallPatternClassficationWeight(IWeight, metaclass=Singleton):
     cls=[
             "animal", 
@@ -202,4 +202,3 @@ class OuterPatternClassficationWeight(IWeight, metaclass=Singleton):
     def __init__(self, display=True, conf_thres=0.25, imgsz=(224, 224), device='0', cls=None, weights_path=None, name=None, id=None) -> None:
         super().__init__(display, conf_thres, imgsz, device, cls, weights_path, name, id)
         
-"""
