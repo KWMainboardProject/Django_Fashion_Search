@@ -10,15 +10,15 @@ from rest_framework.response import Response
 from time import sleep
 
 # add our project
-from .serializers import *
+from analysis.serializers import *
 
 from detect.pipe_factory import *
 
 # Create your views here.
-class AnalysisStateSViewSet(viewsets.ModelViewSet):
-    lookup_field = 'id'
-    queryset = pipe_work_state.objects.all()
-    serializer_class = AnalysisStateSerializer
+# class AnalysisStateSViewSet(viewsets.ModelViewSet):
+#     lookup_field = 'id'
+#     queryset = pipe_work_state.objects.all()
+#     serializer_class = AnalysisStateSerializer
 class ImageAttributesViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     queryset = image_attributes.objects.all()
@@ -36,11 +36,11 @@ def test_make_attributes(img_id, t=1):
     print("======== test ============")
     detect_img = request_image.objects.get(id=img_id)
     detect_img.analysis_state="P"
-    detect_img.save()
+    # detect_img.save()
     print("======== start Process ============")
     
     #set pipe
-    factory = Factory(device='0', display=False)
+    factory = Factory(device='0', display=True)
     start_pipe = factory.pipe
     
     ### Dataloader ###
@@ -55,8 +55,6 @@ def test_make_attributes(img_id, t=1):
         input = PipeResource(im=im0, metadata=metadata, images=images, s=s)
         # push input
         start_pipe.push_src(input)
-    
-    
     
     
     print("======== detect done ============")

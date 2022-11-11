@@ -7,19 +7,19 @@ from image.models import request_image
 from fashion_api.settings import BASE_DIR, MEDIA_ROOT
 
 # Create your models here.
-class pipe_work_state(Model):
-    WORK_STATE = [
-        ('U', "Undefine"),
-        ('A', "Progress"),
-        ('N', "None"),
-        ('D', "Done"),
-    ]
-    main = models.ForeignKey(to="label.Maincategory", on_delete=CASCADE, verbose_name="Main Category")
-    image = models.ForeignKey(to="image.request_image", on_delete=CASCADE, verbose_name="Image")
-    subcategory = models.CharField(max_length=1, choices=WORK_STATE, verbose_name="Sub Category Work State", default="U")
-    pattern = models.CharField(max_length=1, choices=WORK_STATE, verbose_name="Pattern Work State", default="U")
-    maincolor = models.CharField(max_length=1, choices=WORK_STATE, verbose_name="Main Color Work State", default="U")
-    subcolor = models.CharField(max_length=1, choices=WORK_STATE, verbose_name="Sub Color Work State", default="U")
+# class pipe_work_state(Model):
+#     WORK_STATE = [
+#         ('U', "Undefine"),
+#         ('A', "Progress"),
+#         ('N', "None"),
+#         ('D', "Done"),
+#     ]
+#     main = models.ForeignKey(to="label.Maincategory", on_delete=CASCADE, verbose_name="Main Category")
+#     image = models.ForeignKey(to="image.request_image", on_delete=CASCADE, verbose_name="Image")
+#     subcategory = models.CharField(max_length=1, choices=WORK_STATE, verbose_name="Sub Category Work State", default="U")
+#     pattern = models.CharField(max_length=1, choices=WORK_STATE, verbose_name="Pattern Work State", default="U")
+#     maincolor = models.CharField(max_length=1, choices=WORK_STATE, verbose_name="Main Color Work State", default="U")
+#     subcolor = models.CharField(max_length=1, choices=WORK_STATE, verbose_name="Sub Color Work State", default="U")
     
 class image_attributes(Model):
     image = models.ForeignKey(to="image.request_image", on_delete=CASCADE, verbose_name="Image")
@@ -28,7 +28,7 @@ class image_attributes(Model):
 
 
 class ImageAttributesTable(DBView):
-    id =  models.OneToOneField(to="image_attributes", primary_key=True, on_delete=models.DO_NOTHING, verbose_name="Image ID")
+    # id =  models.ForeignKey(to="analysis.image_attributes", primary_key=True, on_delete=models.DO_NOTHING, verbose_name="Image ID")
     image = models.ForeignKey(to="image.request_image", on_delete=CASCADE, verbose_name="Image")
     img_url = models.ImageField(verbose_name="Image URL")
     maincategory = models.ForeignKey(to="label.Maincategory", on_delete=models.DO_NOTHING, verbose_name="Main Category ID")
@@ -47,7 +47,7 @@ class ImageAttributesTable(DBView):
                 "attribute__type__name",
                 "attribute__data"
                 ).annotate(
-                    id=F("id"),
+                    # id=F("id"),
                     img_url=F("image__img"),
                     maincategory_id=F("attribute__type__main_id"), 
                     attributes_id=F("attribute_id"),

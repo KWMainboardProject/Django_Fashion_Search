@@ -15,16 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import AnalysisStateSViewSet, ImageAttributesViewSet, ImageAttributesTableViewSet, DetectRequestAPIView
+from .views import ImageAttributesViewSet, ImageAttributesTableViewSet, DetectRequestAPIView #AnalysisStateSViewSet, 
 
 #define ViewSet
-AnalysisState_list = AnalysisStateSViewSet.as_view({
-    'get' : 'list',
-})
-AnalysisState_detail = AnalysisStateSViewSet.as_view({
-    'get' : 'retrieve',
-    'delete' : 'destroy'
-})
+# AnalysisState_list = AnalysisStateSViewSet.as_view({
+#     'get' : 'list',
+# })
+# AnalysisState_detail = AnalysisStateSViewSet.as_view({
+#     'get' : 'retrieve',
+#     'delete' : 'destroy'
+# })
 ImageAttributes_list = ImageAttributesViewSet.as_view({
     'get' : 'list',
 })
@@ -43,8 +43,8 @@ ImageAttributesTable_detail = ImageAttributesTableViewSet.as_view({
 #define url pattern
 urlpatterns = [
     # path("fashion/<int:carom_id>/<str:usr>/", DetectRequestAPIView.as_view()),
-    path("state/", AnalysisState_list),
-    path("state/<int:id>/", AnalysisState_detail),
+    # path("state/", AnalysisState_list),
+    # path("state/<int:id>/", AnalysisState_detail),
     path("attributes/simple/", ImageAttributes_list),
     path("attributes/simple/<int:id>/", ImageAttributes_detail),
     path("attributes/result/", ImageAttributesTable_list),

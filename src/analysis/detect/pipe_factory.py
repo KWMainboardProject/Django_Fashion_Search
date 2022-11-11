@@ -49,7 +49,7 @@ def test_print(s, s1="", s2="", s3="", s4="", s5="", end="\n"):
     if is_test_factory():
         print("factory pipe test : ", s, s1, s2, s3, s4, s5, end=end)
 
-class Factory(metaclass=Singleton):
+class Factory():
     def __init__(self, start_pipe=None, device='0', display = True):
         self.pipe = pipe_factory(start_pipe=start_pipe, device=device, display=display)
     
