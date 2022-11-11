@@ -28,7 +28,7 @@ class image_attributes(Model):
 
 
 class ImageAttributesTable(DBView):
-    # id =  models.OneToOneField(to="Attributes", primary_key=True, on_delete=models.DO_NOTHING, verbose_name="Attributes ID")
+    id =  models.OneToOneField(to="image_attributes", primary_key=True, on_delete=models.DO_NOTHING, verbose_name="Image ID")
     image = models.ForeignKey(to="image.request_image", on_delete=CASCADE, verbose_name="Image")
     img_url = models.ImageField(verbose_name="Image URL")
     maincategory = models.ForeignKey(to="label.Maincategory", on_delete=models.DO_NOTHING, verbose_name="Main Category ID")

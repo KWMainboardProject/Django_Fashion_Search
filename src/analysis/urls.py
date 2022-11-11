@@ -45,7 +45,7 @@ urlpatterns = [
     # path("fashion/<int:carom_id>/<str:usr>/", DetectRequestAPIView.as_view()),
     path("state/", AnalysisState_list),
     path("state/<int:id>/", AnalysisState_detail),
-    path("attributes/simple", ImageAttributes_list),
+    path("attributes/simple/", ImageAttributes_list),
     path("attributes/simple/<int:id>/", ImageAttributes_detail),
     path("attributes/result/", ImageAttributesTable_list),
     path("attributes/result/<int:id>/", ImageAttributesTable_detail),

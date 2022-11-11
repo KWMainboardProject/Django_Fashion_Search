@@ -1,7 +1,17 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
-import os
+# set path
 import sys
+from pathlib import Path
+import os
+
+FILE = Path(__file__).resolve()
+ROOT = FILE.parent
+DETECT_DIR = ROOT / "analysis"
+print(DETECT_DIR)
+tmp = DETECT_DIR
+if str(tmp) not in sys.path and os.path.isabs(tmp):
+    sys.path.append(str(tmp))  # add ROOT to PATH
 
 
 def main():
